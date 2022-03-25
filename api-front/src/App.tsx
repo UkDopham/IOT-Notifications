@@ -1,13 +1,12 @@
 import React from 'react';
+import { Notifications } from './Components/Notifications';
 
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Notifications
-        </p>
+    <div>
+      <header>
+        <Notifications/>
       </header>
     </div>
   );
