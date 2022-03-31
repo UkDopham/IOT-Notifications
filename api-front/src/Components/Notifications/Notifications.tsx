@@ -2,8 +2,12 @@ import { useEffect, useState } from 'react';
 import { Box, Typography, List, ListItem, Button, TextField } from '@material-ui/core';
 import { useStyles } from './Notifications.style';
 import axios, { AxiosResponse } from 'axios';
-import { API, baseURL } from '../Utils/Api';
+import { API, baseURL } from '../../Utils/Api';
 
+const privateKey = "";
+const publicKey = "";
+
+let publicKeyBack = "";
 export interface INotification {
   text: string;
   subtext: string;
@@ -29,7 +33,11 @@ const test = [{
   id: 2,
 }]
 
-export const Notifications = () => {
+type Props = {
+  setIsLog: any,
+}
+
+export const Notifications = (props: Props) => {
   const [accounts, setAccounts] = useState(test);
   const [currentAccount, setCurrentAccount] = useState({
     name: "",
@@ -54,24 +62,44 @@ export const Notifications = () => {
       });
   }
 
+  const PostPublicKey = () => {
+    axios.post(baseURL, {
+      data: {
+        publicKey: publicKey
+      }
+    }) //Modifier en fonction du chemin de la requete
+      .then((response: AxiosResponse) => {
+        console.log(response.data);
+        publicKeyBack = response.data;
+      }).catch((axios: any) => {
+        console.log(axios);
+      });
+  }
+
   const PostAccount = (account: IAccount) => {
     axios.post(baseURL, {
-    data: {
-      name: account.name,
-      email: account.email,
-      phone: account.phone,
-      id: account.id
-    }
-  }) //Modifier en fonction du chemin de la requete
-    .then((response: AxiosResponse) => {
-      console.log(response.data);
-      console.log("post " + account.id);
-      account.id = response.data; // on recup l'id de la reponse
-      accounts.push(account);
-      accounts.sort((accountA, accountB) => accountA.id > accountB.id ? 1 : -1);            
-    }).catch((axios: any) => {
-      console.log(axios);
-    });
+      data: {
+        name: account.name,
+        email: account.email,
+        phone: account.phone,
+        id: account.id
+      }
+    }) //Modifier en fonction du chemin de la requete
+      .then((response: AxiosResponse) => {
+        console.log(response.data);
+        console.log("post " + account.id);
+        account.id = response.data; // on recup l'id de la reponse
+        accounts.push(account);
+        accounts.sort((accountA, accountB) => accountA.id > accountB.id ? 1 : -1);
+        setCurrentAccount({
+          name: "",
+          email: "",
+          phone: "",
+          id: -1,
+        });
+      }).catch((axios: any) => {
+        console.log(axios);
+      });
   }
 
   const PutAccount = (account: IAccount) => {
