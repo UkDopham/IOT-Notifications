@@ -9,6 +9,7 @@ export const useStyles = makeStyles<Theme>(theme =>
             padding: 5,
             fontWeight: "bold",
             fontSize: 35,
+            color: "white"
         },
         buttonBig: {
             margin: 15,
@@ -18,22 +19,39 @@ export const useStyles = makeStyles<Theme>(theme =>
         buttonSmall: {
             margin: 15,
             padding: 5,
-            backgroundColor: "green",
+            backgroundColor: "#477e5e",
             alignItems: "center",
             justifyContent: "center",
         },
         box: {
             textAlign: "center",
-            margin: "20%",
-            padding: "10%",
-            backgroundColor: "yellow",
+            margin: "10%",
+            padding: "5%",
+            backgroundColor: "#94ce98",
             borderRadius: 10,
             alignItems: "center",
             justifyContent: "center",
         },
-        listItem : {
+        listItem: {
             alignItems: "center",
             justifyContent: "center",
+        },
+        avatar: {
+            width: "20%",
+            height: "20%"
+        },
+        title: {
+            fontWeight: "bold",
+            fontSize: 55,
+            margin: 5,
+        },
+        subtitle: {
+            margin: 5,
+            fontSize: 35,
+            color: "white"
+        },
+        input: {
+            color: "white"
         }
     })
 );

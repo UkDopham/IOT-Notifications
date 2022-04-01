@@ -7,10 +7,13 @@ export const useStyles = makeStyles<Theme>(theme =>
     text: {
       margin: 10,
       padding: 5,
-      backgroundColor: "red",
+      backgroundColor: "#94ce98",
       fontSize: 15,
       minWidth: 100,
       maxWidth: 200,
+      borderRadius: 10,
+      color :"white",
+      fontWeight : "bold"
     },
     buttonBig: {
       margin: 15,
@@ -20,7 +23,11 @@ export const useStyles = makeStyles<Theme>(theme =>
     buttonSmall:{
       margin: 10,
       padding: 5,
-      backgroundColor: "green",
+      backgroundColor: "#477e5e",
+      color :"white"
+    },
+    input:{
+      color :"white"
     }
   })
 );

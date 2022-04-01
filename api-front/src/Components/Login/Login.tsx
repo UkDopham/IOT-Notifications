@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Typography, List, ListItem, Button, TextField } from '@material-ui/core';
+import { Box, Typography, List, ListItem, Button, TextField, Avatar } from '@material-ui/core';
 import { useStyles } from './Login.style';
 import axios, { AxiosResponse } from 'axios';
 import { API, baseURL } from '../../Utils/Api';
@@ -43,37 +43,44 @@ export const Login = (props: Props) => {
     }
 
     return (
-        <List className={classes.box}>
-            <ListItem className={classes.listItem}>
-                <Typography className={classes.text} >Email :</Typography>
-                <TextField className={classes.text}
-                    value={currentAccount.email}
-                    id="accountname"
-                    onChange={(event) => setCurrentAccount({
-                        email: event.target.value,
-                        password: currentAccount.password,
-                    })}
-                />
-            </ListItem>
+        <Box>
+            <List className={classes.box}>
+                <ListItem className={classes.listItem}>
+                    <Avatar className={classes.avatar} src="serveur.png" />
+                    <Typography className={classes.title} >SmartHome</Typography>
+                    <Typography className={classes.subtitle} >by Bento</Typography>
+                </ListItem>
+                <ListItem className={classes.listItem}>
+                    <Typography className={classes.text} >Email :</Typography>
+                    <TextField className={classes.text}
+                        value={currentAccount.email}
+                        id="accountname"
+                        onChange={(event) => setCurrentAccount({
+                            email: event.target.value,
+                            password: currentAccount.password,
+                        })}
+                    />
+                </ListItem>
 
-            <ListItem className={classes.listItem}>
-                <Typography className={classes.text} >Password :</Typography>
-                <TextField className={classes.text}
-                    type="password"
-                    value={currentAccount.password}
-                    id="accountemail"
-                    onChange={(event) => setCurrentAccount({
-                        email: currentAccount.email,
-                        password: event.target.value,
-                    })}
-                />
-            </ListItem>
+                <ListItem className={classes.listItem}>
+                    <Typography className={classes.text} >Password :</Typography>
+                    <TextField className={classes.text}
+                        type="password"
+                        value={currentAccount.password}
+                        id="accountemail"
+                        onChange={(event) => setCurrentAccount({
+                            email: currentAccount.email,
+                            password: event.target.value,
+                        })}
+                    />
+                </ListItem>
 
-            <ListItem className={classes.listItem}>
-                <Button className={classes.buttonSmall} onClick={() => Login()}>
-                    <Typography className={classes.text}>Login</Typography>
-                </Button>
-            </ListItem>
-        </List>
+                <ListItem className={classes.listItem}>
+                    <Button className={classes.buttonSmall} onClick={() => Login()}>
+                        <Typography className={classes.text}>Login</Typography>
+                    </Button>
+                </ListItem>
+            </List>
+        </Box>
     );
 }
