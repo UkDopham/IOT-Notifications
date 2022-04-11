@@ -21,19 +21,23 @@ export const Login = (props: Props) => {
     const classes = useStyles();
 
     const PostAccount = () => {
-        axios.post(baseURL, {
-            data: {
-                email: currentAccount.email,
-                password: currentAccount.password,
-            }
-        }) //Modifier en fonction du chemin de la requete
-            .then((response: AxiosResponse) => {
-                console.log(response.data);
-                console.log("post " + currentAccount.email);
-                props.setIsLog(true);
-            }).catch((axios: any) => {
-                console.log(axios); // Pas le bon mot de passe
-            });
+        const data={email: currentAccount.email,password: currentAccount.password};
+        //POST méthode à utiliser pour communiquer avec le BACKEND - Valentin
+        fetch(API.postAccount,{
+            method:'POST',
+            mode:'no-cors',
+            headers: {'Content-Type':'application/json'},
+            body : JSON.stringify(data)
+        })
+            
+        // ) //Modifier en fonction du chemin de la requete
+        //     .then((response: AxiosResponse) => {
+        //         console.log(response.data);
+        //         console.log("post " + currentAccount.email);
+        //         props.setIsLog(true);
+        //     }).catch((axios: any) => {
+        //         console.log(axios); // Pas le bon mot de passe
+        //     });
     }
 
     const Login = () => {
@@ -76,7 +80,7 @@ export const Login = (props: Props) => {
                 </ListItem>
 
                 <ListItem className={classes.listItem}>
-                    <Button className={classes.buttonSmall} onClick={() => Login()}>
+                    <Button className={classes.buttonSmall} onClick={() => PostAccount()}>
                         <Typography className={classes.text}>Login</Typography>
                     </Button>
                 </ListItem>
