@@ -23,21 +23,27 @@ export const Login = (props: Props) => {
     const PostAccount = () => {
         const data={email: currentAccount.email,password: currentAccount.password};
         //POST méthode à utiliser pour communiquer avec le BACKEND - Valentin
-        fetch(API.postAccount,{
-            method:'POST',
-            mode:'no-cors',
-            headers: {'Content-Type':'application/json'},
-            body : JSON.stringify(data)
-        })
+        // fetch(API.postAccount,{
+        //     method:'POST',
+        //     mode:'no-cors',
+        //     headers: {'Content-Type':'application/json'},
+        //     body : JSON.stringify(data)
+        // })
             
-        // ) //Modifier en fonction du chemin de la requete
-        //     .then((response: AxiosResponse) => {
-        //         console.log(response.data);
-        //         console.log("post " + currentAccount.email);
-        //         props.setIsLog(true);
-        //     }).catch((axios: any) => {
-        //         console.log(axios); // Pas le bon mot de passe
-        //     });
+         //Modifier en fonction du chemin de la requete
+        axios.post(API.postLogin, {
+            data: {
+                email: currentAccount.email,
+                password: currentAccount.password,
+            }
+        }) //Modifier en fonction du chemin de la requete
+              .then((response: AxiosResponse) => {
+                console.log(response);
+                console.log("post " + currentAccount.email);
+                props.setIsLog(true);
+            }).catch((axios: any) => {
+                console.log(axios); // Pas le bon mot de passe
+            });
     }
 
     const Login = () => {

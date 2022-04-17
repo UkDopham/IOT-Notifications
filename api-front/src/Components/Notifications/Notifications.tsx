@@ -49,11 +49,11 @@ export const Notifications = (props: Props) => {
 
   useEffect(() => {
     // Use [] as second argument in useEffect for not rendering each time
-    //GetAllAccounts();
+    GetAllAccounts();
   }, []);
 
   const GetAllAccounts = () => {
-    axios.get(baseURL) //Modifier en fonction du chemin de la requete
+    axios.get(API.getAccounts) //Modifier en fonction du chemin de la requete
       .then((response: AxiosResponse) => {
         console.log(response.data);
         setAccounts(response.data);
@@ -77,7 +77,7 @@ export const Notifications = (props: Props) => {
   }
 
   const PostAccount = (account: IAccount) => {
-    axios.post(baseURL, {
+    axios.post(API.postAccount, {
       data: {
         name: account.name,
         email: account.email,
@@ -103,7 +103,7 @@ export const Notifications = (props: Props) => {
   }
 
   const PutAccount = (account: IAccount) => {
-    axios.put(baseURL, {
+    axios.put(API.putAccount, {
       data: {
         name: account.name,
         email: account.email,
@@ -120,7 +120,7 @@ export const Notifications = (props: Props) => {
   }
 
   const DeleteAccount = (id: number) => {
-    axios.delete(baseURL, { data: { id: id } }) //Modifier en fonction du chemin de la requete
+    axios.delete(API.deleteAccount, { data: { id: id } }) //Modifier en fonction du chemin de la requete
       .then((response: AxiosResponse) => {
         console.log(response.data);
         console.log("delete " + id);
@@ -134,18 +134,18 @@ export const Notifications = (props: Props) => {
 
   const OnClickAddNew = () => {
     console.log("add new contact " + currentAccount.id);
-    //PostAccount(currentAccount);
+    PostAccount(currentAccount);
   }
 
   const OnClickDelete = (id: number) => {
     console.log("on click delete " + id);
-    //DeleteAccount(id);
+    DeleteAccount(id);
   }
 
   const OnChangePut = (account: IAccount) => {
     console.log("on change put " + account.id);
     console.log(account.name);
-    //PutAccount(account);
+    PutAccount(account);
   }
 
   const OnChangeName = (id: number, name: any) => {
