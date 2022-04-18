@@ -2,6 +2,8 @@ import csv
 import pandas as pd
 import requests as req
 import random
+import mysql.connector
+from mysql.connector import Error
 
 #--------------------------------------------------------------------
 # #EMAIL BOT SENDER
@@ -33,27 +35,132 @@ import random
 # server.send_message(message)#All emails sent, log out.
 # server.quit()
 
+#########A METTRE POUR SE CONNECTER BASE DE DONNEES#######
+host = 'localhost'
+user = 'root'
+password = 'mdp'
+##########################################################
 #--------------------------------------------------------------------
 
 
-account_BDD=[]
+#account_BDD=[]
 
-def addNewAccount(post_data):
-    if post_data not in account_BDD:
-        account_BDD.append(post_data)
-        print("[+] Account added successfully !")
-    else:
-        print("[/!\] Email is already registered !")
+#Méthode permettant de créer une base de données de base si elle n'existe pas en local
+def checkDB():
+    try:
+        connexion = mysql.connector.connect(host=host,
+                                             user=user,
+                                             password=password)
+        mySql_Query = """CREATE DATABASE IF NOT EXISTS IOTNotification"""
+        cursor = connexion.cursor()
+        cursor.execute(mySql_Query)
+        connexion.commit() 
+        mySql_Query = """CREATE TABLE IF NOT EXISTS `IOTNotification`.`Users`(`email` VARCHAR(30), `password` VARCHAR(100), PRIMARY KEY (`email`));"""
+        cursor = connexion.cursor()
+        cursor.execute(mySql_Query)
+        connexion.commit() 
+        mySql_Query = """INSERT INTO `IOTNotification`.`Users` (`email`) SELECT ('email@gmail.com') WHERE NOT EXISTS (SELECT * FROM `IOTNotification`.`Users`)"""
+        cursor = connexion.cursor()
+        cursor.execute(mySql_Query)
+        connexion.commit()
+        mySql_Query = """UPDATE `IOTNotification`.`Users` SET password = SHA('test') WHERE email = 'email@gmail.com';"""
+        cursor = connexion.cursor()
+        cursor.execute(mySql_Query)
+        connexion.commit()
+    except Error as e:
+        print("Erreur en essayant de connecter à la base de données", e)
+    finally:
+        if connexion.is_connected():
+            cursor.close()
+            connexion.close()
 
-def removeAccount(post_account_id):
-    for account in account_BDD:
-        if account['id'] == post_account_id:
-            account_BDD.remove(account)
+#Méthode permettant d'ajouter un compte dans la base de données
+def addNewAccount(json_data):
+    try:
+        checkDB()
+        connexion = mysql.connector.connect(host=host,
+                                             database='IOTNotification',
+                                             user=user,
+                                             password=password)
+        mySql_Query = """SELECT COUNT(*) FROM USERS WHERE email = %s"""
+        val = (json_data[0]['email'],)
+        cursor = connexion.cursor()
+        cursor.execute(mySql_Query, val)
+        result = cursor.fetchall()
+        connexion.commit()
+        if(result[0][0] == 0):
+            mySql_Query = "INSERT INTO USERS (email, password) VALUES (%s, SHA(%s))"
+            val = (json_data[0]['email'], json_data[0]['password'])
+            cursor = connexion.cursor()
+            cursor.execute(mySql_Query, val)
+            connexion.commit()
+            print("[+] Account added successfully !")
+    except Error as e:
+        print("Erreur en essayant de connecter à la base de données", e)
+    finally:
+        if connexion.is_connected():
+            cursor.close()
+            connexion.close()
+    # if json_data not in account_BDD:
+    #     account_BDD.append(json_data)
+    #     print("[+] Account added successfully !")
+    # else:
+    #     print("[/!\] Email is already registered !")
+
+#Méthode permettant de supprimer un compte dans la base de données 
+def removeAccount(json_data):
+    try:
+        checkDB()
+        connexion = mysql.connector.connect(host=host,
+                                             database='IOTNotification',
+                                             user=user,
+                                             password=password)
+        mySql_Query = """SELECT COUNT(*) FROM USERS WHERE email = %s"""
+        val = (json_data[0]['email'],)
+        cursor = connexion.cursor()
+        cursor.execute(mySql_Query, val)
+        result = cursor.fetchall()
+        connexion.commit()
+        if(result[0][0] == 1):
+            mySql_Query = "DELETE FROM USERS WHERE email = %s"
+            val = (json_data[0]['email'],)
+            cursor = connexion.cursor()
+            cursor.execute(mySql_Query, val)
+            connexion.commit()
             print("[+] Account removed successfully !")
-            return
-    print("[/!\] Account to be removed not found !")
+    except Error as e:
+        print("Erreur en essayant de connecter à la base de données", e)
+    finally:
+        if connexion.is_connected():
+            cursor.close()
+            connexion.close()
+    # for account in account_BDD:
+    #     if account['id'] == post_account_id:
+    #         account_BDD.remove(account)
+    #         print("[+] Account removed successfully !")
+    #         return
+    # print("[/!\] Account to be removed not found !")
 
-# def modifyAccount(post_data):
+#Méthode permettant de modifier un compte dans la base de données
+def modifyAccount(json_data):
+    try:
+        checkDB()
+        connexion = mysql.connector.connect(host=host,
+                                             database='IOTNotification',
+                                             user=user,
+                                             password=password)
+        mySql_Query = """UPDATE `IOTNotification`.`Users` SET password = SHA(%s) WHERE email = %s;"""
+        val = (json_data[0]['password'], json_data[0]['email'])
+        cursor = connexion.cursor()
+        cursor.execute(mySql_Query, val)
+        connexion.commit()
+        print("[+] Account modified successfully !")
+    except Error as e:
+        print("Erreur en essayant de connecter à la base de données", e)
+    finally:
+        if connexion.is_connected():
+            cursor.close()
+            connexion.close()
 
 
 def sendDataToWebInterface(packet):
