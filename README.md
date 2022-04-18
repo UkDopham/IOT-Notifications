@@ -21,3 +21,6 @@ Use pip to install Connector/Python on most operating systems:
 pip install mysql-connector-python
 
 As the database is local, in the code on the main.py part of the backend, put your administrator credentials and the password to be able to create and connect to the database.
+
+![image](https://user-images.githubusercontent.com/78219632/163748169-19349a02-5ec9-470c-975e-54e02b55d277.png)
+
