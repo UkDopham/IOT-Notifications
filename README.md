@@ -1,4 +1,4 @@
-# MySql Information
+# MySql Informations
 
 Connector/Python installers in native package formats are available for Windows and Unix systems
 
