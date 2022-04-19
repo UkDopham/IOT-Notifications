@@ -1,4 +1,10 @@
-# MySql Informations
+# IOT Notifications System -  8INF912 - Special Topic in Computer Science II
+
+A notification system in case of detection of abnormal behavior.
+
+## Installation
+
+## MySql - Database
 
 Connector/Python installers in native package formats are available for Windows and Unix systems
 
@@ -24,3 +30,48 @@ As the database is local, in the code on the main.py part of the backend, put yo
 
 ![image](https://user-images.githubusercontent.com/78219632/163748169-19349a02-5ec9-470c-975e-54e02b55d277.png)
 
+## Node React - Front
+
+Download the package manager [Node](https://nodejs.org/en/download/) to install the front.
+
+It is recommended to install Yarn through the npm package manager, which comes bundled with Node.js when you install it on your system.
+
+Once you have npm installed you can run the following both to install and upgrade Yarn.
+
+``` Yarn
+npm install --global yarn
+```
+
+## Python - Back
+
+
+## Usage
+
+## Front 
+
+![powershell](/screenshots/Screenshot_3.jpg)
+
+```powershell
+# go into the front folder
+cd api-front 
+
+# download the packages
+yarn
+
+# run the front
+yarn start
+```
+![login](/screenshots/Screenshot_1.jpg)
+
+you can now connect to the application by entering your login details.
+
+![contacts](/screenshots/Screenshot_2.jpg)
+
+## Back 
+
+## Database 
+
+## Contributing
+Antoine Delay
+Alexandre Do Pham
+Valentin Mellier
