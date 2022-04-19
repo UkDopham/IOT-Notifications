@@ -72,6 +72,6 @@ you can now connect to the application by entering your login details.
 ## Database 
 
 ## Contributing
-Antoine Delay
-Alexandre Do Pham
-Valentin Mellier
+Antoine Delay - 
+Alexandre Do Pham - 
+Valentin Mellier - 
