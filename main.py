@@ -44,7 +44,7 @@ def checkDB():
         mySql_Query = """CREATE TABLE IF NOT EXISTS `IOTNotification`.`Contacts`(`name` VARCHAR(20), `email` VARCHAR(30), `phone` VARCHAR(20), `id` BIGINT NOT NULL, PRIMARY KEY (`id`));"""
         cursor.execute(mySql_Query)
         connexion.commit()
-        mySql_Query = """CREATE TABLE IF NOT EXISTS `IOTNotification`.`Datas`(`id` BIGINT NOT NULL, `type` VARCHAR(20), `value` DOUBLE, PRIMARY KEY (`id`));"""
+        mySql_Query = """CREATE TABLE IF NOT EXISTS `IOTNotification`.`Datas`(`id` BIGINT NOT NULL, `type` VARCHAR(20), `value` DOUBLE, `anomaly` INTEGER, PRIMARY KEY (`id`));"""
         cursor.execute(mySql_Query)
         connexion.commit()
     except Error as e:
@@ -139,31 +139,24 @@ def addNewContact(json_data):
         #print("[/!\] Email is already registered !")
         
 #Méthode permettant d'ajouter une nouvelle donnée à la base de données
-def addData(json_data):
+def addData(measureAnalysed):
     try:
         checkDB()
         connexion = mysql.connector.connect(host=host,
                                              database='IOTNotification',
                                              user=user,
                                              password=password)
-        mySql_Query = """SELECT COUNT(*) FROM Datas WHERE id = %s"""
-        data = json_data['data']
-        val = (data['id'],)
-        cursor = connexion.cursor()
-        cursor.execute(mySql_Query, val)
-        result = cursor.fetchall()
-        connexion.commit()
         mySql_Query = """SELECT id FROM Datas ORDER BY ID DESC LIMIT 1"""
+        cursor = connexion.cursor()
         cursor.execute(mySql_Query)
         cpt = cursor.fetchall()
         if(cpt == []):
             cpt.append(tuple((0,)))
         connexion.commit()
-        if(result[0][0] == 0):
-            mySql_Query = "INSERT INTO Datas (id, type, value) VALUES (%s, %s, %s)"
-            #val = (cpt[0][0] + 1, data['type'], data['value'])
-            cursor.execute(mySql_Query, val)
-            connexion.commit()
+        mySql_Query = "INSERT INTO Datas (id, type, value, anomaly) VALUES (%s, %s, %s, %s)"
+        val = (cpt[0][0] + 1, measureAnalysed[0][0], measureAnalysed[0][1], measureAnalysed[0][2])
+        cursor.execute(mySql_Query, val)
+        connexion.commit()
     except Error as e:
         print("Erreur en essayant de connecter à la base de données", e)
     finally:
@@ -316,3 +309,4 @@ def alert():
         #Si mesure définit comme anormal ou ayant été détecté comme une anomalie, notifier
         if(measureAnalysed[1]!=0):
             sendmail(server,measureAnalysed)
+            addData(measureAnalysed)
