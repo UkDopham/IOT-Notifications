@@ -2,7 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging
 import json
 from numpy import mat
-from main import getAllAccounts, getAllContacts, addNewAccount, removeAccount, modifyAccount
+from main import getAllAccounts, getAllContacts, addNewContact, removeContact, modifyContact
 import simplejson
 import hashlib
 
@@ -80,7 +80,7 @@ class S(BaseHTTPRequestHandler):
         if self.path == "/api/put/changeAccount":
             print("/api/put/changeAccount")
             # TODO Change account in database
-            modifyAccount(json_data)
+            modifyContact(json_data)
             for contact in contacts :
                 data = json_data['data']
 
@@ -113,7 +113,7 @@ class S(BaseHTTPRequestHandler):
         if self.path == "/api/delete":
             print("api/delete")
             print(json_data['id'])
-            removeAccount(json_data)
+            removeContact(json_data)
             sendRespond(self, "/api/delete", 200)
 
 
@@ -153,7 +153,7 @@ class S(BaseHTTPRequestHandler):
         elif self.path == "/api/post/newAccount":
             print("/api/post/newAccount")
             sendRespond(self,"/api/post working", 200)
-            addNewAccount(json_data)
+            addNewContact(json_data)
             id = "11" # TODO need to get id when adding in database    
             self._set_response()
             self.wfile.write(id.encode('utf-8'))   
