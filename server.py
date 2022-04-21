@@ -134,7 +134,7 @@ class S(BaseHTTPRequestHandler):
 
             for account in accounts :
                 data = json_data['data']
-                m = hashlib.sha1((data['password']).encode("utf-8"))
+                m = hashlib.sha1((data['password']).encode("utf-8")).hexdigest()
 
                 if account.email == data['email'] and account.password == m:
                     isPossible = True
