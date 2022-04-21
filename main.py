@@ -119,8 +119,7 @@ def addNewContact(json_data):
         cursor.execute(mySql_Query)
         cpt = cursor.fetchall()
         if(cpt == []):
-            cpt = result
-            cpt[0][0] = 0
+            cpt.append(tuple((0,)))
         connexion.commit()
         if(result[0][0] == 0):
             mySql_Query = "INSERT INTO Contacts (name, email, phone, id) VALUES (%s, %s, %s, %s)"
@@ -158,8 +157,7 @@ def addData(json_data):
         cursor.execute(mySql_Query)
         cpt = cursor.fetchall()
         if(cpt == []):
-            cpt = result
-            cpt[0][0] = 0
+            cpt.append(tuple((0,)))
         connexion.commit()
         if(result[0][0] == 0):
             mySql_Query = "INSERT INTO Datas (id, type, value) VALUES (%s, %s, %s)"
