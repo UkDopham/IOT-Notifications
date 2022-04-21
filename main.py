@@ -154,7 +154,7 @@ def addData(measureAnalysed):
             cpt.append(tuple((0,)))
         connexion.commit()
         mySql_Query = "INSERT INTO Datas (id, type, value, anomaly) VALUES (%s, %s, %s, %s)"
-        val = (cpt[0][0] + 1, measureAnalysed[0][0], measureAnalysed[0][1], measureAnalysed[0][2])
+        val = (cpt[0][0] + 1, measureAnalysed[0][0], measureAnalysed[0][1], measureAnalysed[1])
         cursor.execute(mySql_Query, val)
         connexion.commit()
     except Error as e:

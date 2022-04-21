@@ -192,4 +192,4 @@ if __name__ == '__main__':
 
         Process(target=run()).start()
 
-        Process(target=alert()).start()
+        #Process(target=alert()).start()
