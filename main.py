@@ -43,7 +43,7 @@ password = 'mdp'
 ##########################################################
 #--------------------------------------------------------------------
 
-#Méthode permettant de créer une base de données de base si elle n'existe pas en local
+#Méthode permettant de créer une base de données de base si elle n'existe pas
 def checkDB():
     try:
         connexion = mysql.connector.connect(host=host,
@@ -108,7 +108,7 @@ def checkDB():
             cursor.close()
             connexion.close()
 
-#Méthode permettant de récupérer tous les comptes de la base de données
+#Méthode permettant de récupérer l'ensemble des comptes de la base de données
 def getAllAccounts():
     try:
         accounts = []
@@ -131,6 +131,7 @@ def getAllAccounts():
             cursor.close()
             connexion.close()
 
+#Méthode permettant de récupérer l'ensemble des contacts de la base de données
 def getAllContacts():
     try:
         contacts = []
@@ -153,7 +154,7 @@ def getAllContacts():
             cursor.close()
             connexion.close()
 
-#Méthode permettant de créer une base de données de base si elle n'existe pas en local
+#Méthode permettant d'ajouter un nouveau compte à la base de données
 def addNewAccount(json_data):
     try:
         checkDB()
@@ -171,7 +172,6 @@ def addNewAccount(json_data):
         if(result[0][0] == 0):
             mySql_Query = "INSERT INTO Accounts (email, password) VALUES (%s, SHA(%s))"
             val = (data['email'], data['password'])
-            cursor = connexion.cursor()
             cursor.execute(mySql_Query, val)
             connexion.commit()
     except Error as e:
@@ -186,6 +186,7 @@ def addNewAccount(json_data):
     #else:
         #print("[/!\] Email is already registered !")
 
+#Méthode permettant de supprimer un compte de la base de données 
 def removeAccount(json_data):
     try:
         checkDB()
@@ -194,16 +195,17 @@ def removeAccount(json_data):
                                              user=user,
                                              password=password)
         mySql_Query = """SELECT COUNT(*) FROM Accounts WHERE email = %s"""
-        data = json_data['data']
-        val = (data['email'],)
+        #data = json_data['data']
+        #val = (data['email'],)
+        val = (json_data['email'],)
         cursor = connexion.cursor()
         cursor.execute(mySql_Query, val)
         result = cursor.fetchall()
         connexion.commit()
         if(result[0][0] == 1):
             mySql_Query = "DELETE FROM Accounts WHERE email = %s"
-            val = (data['email'],)
-            cursor = connexion.cursor()
+            #val = (data['email'],)
+            val = (json_data['email'],)
             cursor.execute(mySql_Query, val)
             connexion.commit()
     except Error as e:
@@ -219,6 +221,7 @@ def removeAccount(json_data):
             #return
     #print("[/!\] Account to be removed not found !")
 
+#Méthode permettant de modifier un compte de la base de données 
 def modifyAccount(json_data):
     try:
         checkDB()
@@ -300,7 +303,3 @@ def analyseModule(data):
 #     if(measureAnalysed[1]!=0):
 #         sendDataToWebInterface(measureAnalysed)
 #         # sendDataToMobilePhone(measureAnalysed)
-
-
-
-
