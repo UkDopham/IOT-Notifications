@@ -1,27 +1,17 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging
 import json
+from multiprocessing import Process
 from numpy import mat
-from main import getAllAccounts, getAllContacts, addNewContact, removeContact, modifyContact
+from main import getAllAccounts, getAllContacts, addNewContact, removeContact, modifyContact, Account,Contact,alert
 import simplejson
 import hashlib
 
-class Account : 
-    def __init__(self, email, password):
-        self.email = email
-        self.password = password
 
 # TODO get all accounts in database
 accounts = getAllAccounts()
 #a = Account("a.a@gmail.com", "a")
 #accounts = [ a, b, c]
-
-class Contact :
-    def __init__(self, name, email, phone, id):
-        self.name = name
-        self.email = email
-        self.phone = phone
-        self.id = id    
 
 # TODO get contacts in database
 #d = Contact("Harpagon", "Harpagon@gmail.com", "06 00 00 00 01", 1)
@@ -31,9 +21,11 @@ class Contact :
 #h = Contact("Elise", "Elise@gmail.com", "06 00 00 00 05", 5)
 #i = Contact("Anselme", "Anselme@gmail.com", "06 00 00 00 06", 6)
 #contacts = [d, e, f, g, h, i]
+global contacts
 contacts = getAllContacts()
 
 class S(BaseHTTPRequestHandler):
+
     def _set_response(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
@@ -50,10 +42,13 @@ class S(BaseHTTPRequestHandler):
         if self.path == "/api/get/allAccounts":
             print("api/get/allAccounts")
             #sendRespond(self, "api/get/allAccounts", 200)
+            contacts = getAllContacts()
 
             self._set_response()
             json_data = json.dumps([c.__dict__ for c in contacts])
             self.wfile.write(json_data.encode('utf-8'))
+           
+            
 
     def do_OPTIONS(self):
         self.send_response(200, "ok")
@@ -81,6 +76,7 @@ class S(BaseHTTPRequestHandler):
             print("/api/put/changeAccount")
             # TODO Change account in database
             modifyContact(json_data)
+            contacts = getAllContacts()
             for contact in contacts :
                 data = json_data['data']
 
@@ -114,6 +110,7 @@ class S(BaseHTTPRequestHandler):
             print("api/delete")
             print(json_data['id'])
             removeContact(json_data)
+            contacts = getAllContacts()
             sendRespond(self, "/api/delete", 200)
 
 
@@ -154,7 +151,9 @@ class S(BaseHTTPRequestHandler):
             print("/api/post/newAccount")
             sendRespond(self,"/api/post working", 200)
             addNewContact(json_data)
-            id = "11" # TODO need to get id when adding in database    
+            contacts = getAllContacts()
+            data=json_data['data'] # TODO need to get id when adding in database    
+            id= data['id']
             self._set_response()
             self.wfile.write(id.encode('utf-8'))   
 
@@ -182,6 +181,15 @@ if __name__ == '__main__':
     from sys import argv
 
     if len(argv) == 2:
-        run(port=int(argv[1]))
+
+        Process(target=run(port=int(argv[1]))).start()
+
+        Process(target=alert()).start()
+        
+
+        
     else:
-        run()
+
+        Process(target=run()).start()
+
+        Process(target=alert()).start()

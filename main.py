@@ -3,43 +3,28 @@ import pandas as pd
 import requests as req
 import random
 import mysql.connector
+import time
 from mysql.connector import Error
-from server import Account, Contact
-
-#--------------------------------------------------------------------
 # #EMAIL BOT SENDER
-# import smtplib
-# from email.mime.multipart import MIMEMultipart
-# from email.mime.text import MIMEText
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
-# #Email Account
-# email_sender_account = "smarthomeAlerte@gmail.com"
-# email_sender_username = "Smart Home"
-# email_sender_password = "alerte1234!"
-# email_smtp_server = "smtp.gmail.com"
-# email_smtp_port =587
-# recipient ="valentin.mellier3@gmail.com"
-# email_subject = "Smart Home - Notification"
-# email_body = "Hey, you got an alert 2 !"
 
-# #login to email server
-# server = smtplib.SMTP(email_smtp_server,email_smtp_port)
-# server.starttls()
-# server.login(email_sender_account,email_sender_password)#For loop, sending emails to all email recipients
-# print(f"Sending email to {recipient}")
-# message = MIMEMultipart('alternative')
-# message['From'] = email_sender_account
-# message['To'] = recipient
-# message['Subject'] = email_subject
-# message.attach(MIMEText(email_body, 'plain'))
-# print(message)
-# server.send_message(message)#All emails sent, log out.
-# server.quit()
+#Email Account
+email_sender_account = "smarthomeAlerte@gmail.com"
+email_sender_username = "Smart Home"
+email_sender_password = "alerte1234!"
+email_smtp_server = "smtp.gmail.com"
+email_smtp_port =587
+recipient ="valentin.mellier3@gmail.com"
+email_subject = "Smart Home - Notification"
+email_body = "Hey, you got an alert !"
 
 #########A METTRE POUR SE CONNECTER BASE DE DONNEES#######
 host = 'localhost'
 user = 'root'
-password = 'mdp'
+password = 'root'
 ##########################################################
 #--------------------------------------------------------------------
 
@@ -59,48 +44,6 @@ def checkDB():
         mySql_Query = """CREATE TABLE IF NOT EXISTS `IOTNotification`.`Contacts`(`name` VARCHAR(20), `email` VARCHAR(30), `phone` VARCHAR(20), `id` BIGINT NOT NULL, PRIMARY KEY (`id`));"""
         cursor.execute(mySql_Query)
         connexion.commit() 
-        mySql_Query = """INSERT INTO `IOTNotification`.`Accounts` (`email`) SELECT ('a.a@gmail.com') WHERE NOT EXISTS (SELECT * FROM `IOTNotification`.`Accounts`)"""
-        cursor.execute(mySql_Query)
-        connexion.commit()
-        mySql_Query = """UPDATE `IOTNotification`.`Accounts` SET password = SHA('a') WHERE email = 'a.a@gmail.com';"""
-        cursor.execute(mySql_Query)
-        connexion.commit()
-        mySql_Query = """INSERT INTO `IOTNotification`.`Contacts` (`id`) SELECT (1) WHERE NOT EXISTS (SELECT * FROM `IOTNotification`.`Contacts`)"""
-        cursor.execute(mySql_Query)
-        connexion.commit()
-        mySql_Query = """UPDATE `IOTNotification`.`Contacts` SET name = 'Harpageon', email = 'Harpagon@gmail.com', phone = '06 00 00 00 01' WHERE id = 1;"""
-        cursor.execute(mySql_Query)
-        connexion.commit()
-        mySql_Query = """INSERT INTO `IOTNotification`.`Contacts` (`id`) SELECT (2) WHERE NOT EXISTS (SELECT * FROM `IOTNotification`.`Contacts` WHERE id = 2)"""
-        cursor.execute(mySql_Query)
-        connexion.commit()
-        mySql_Query = """UPDATE `IOTNotification`.`Contacts` SET name = 'Mariane', email = 'Mariane@gmail.com', phone = '06 00 00 00 02' WHERE id = 2;"""
-        cursor.execute(mySql_Query)
-        connexion.commit()
-        mySql_Query = """INSERT INTO `IOTNotification`.`Contacts` (`id`) SELECT (3) WHERE NOT EXISTS (SELECT * FROM `IOTNotification`.`Contacts` WHERE id = 3)"""
-        cursor.execute(mySql_Query)
-        connexion.commit()
-        mySql_Query = """UPDATE `IOTNotification`.`Contacts` SET name = 'Cleante', email = 'Cleante@gmail.com', phone = '06 00 00 00 03' WHERE id = 3;"""
-        cursor.execute(mySql_Query)
-        connexion.commit()
-        mySql_Query = """INSERT INTO `IOTNotification`.`Contacts` (`id`) SELECT (4) WHERE NOT EXISTS (SELECT * FROM `IOTNotification`.`Contacts` WHERE id = 4)"""
-        cursor.execute(mySql_Query)
-        connexion.commit()
-        mySql_Query = """UPDATE `IOTNotification`.`Contacts` SET name = 'Valere', email = 'Valere@gmail.com', phone = '06 00 00 00 04' WHERE id = 4;"""
-        cursor.execute(mySql_Query)
-        connexion.commit()
-        mySql_Query = """INSERT INTO `IOTNotification`.`Contacts` (`id`) SELECT (5) WHERE NOT EXISTS (SELECT * FROM `IOTNotification`.`Contacts` WHERE id = 5)"""
-        cursor.execute(mySql_Query)
-        connexion.commit()
-        mySql_Query = """UPDATE `IOTNotification`.`Contacts` SET name = 'Elise', email = 'Elise@gmail.com', phone = '06 00 00 00 05' WHERE id = 5;"""
-        cursor.execute(mySql_Query)
-        connexion.commit()
-        mySql_Query = """INSERT INTO `IOTNotification`.`Contacts` (`id`) SELECT (6) WHERE NOT EXISTS (SELECT * FROM `IOTNotification`.`Contacts` WHERE id = 6)"""
-        cursor.execute(mySql_Query)
-        connexion.commit()
-        mySql_Query = """UPDATE `IOTNotification`.`Contacts` SET name = 'Anselme', email = 'Anselme@gmail.com', phone = '06 00 00 00 06' WHERE id = 6;"""
-        cursor.execute(mySql_Query)
-        connexion.commit()
     except Error as e:
         print("Erreur en essayant de connecter à la base de données", e)
     finally:
@@ -169,7 +112,7 @@ def addNewContact(json_data):
         cursor.execute(mySql_Query, val)
         result = cursor.fetchall()
         connexion.commit()
-        mySql_Query = """SELECT COUNT(*) FROM Contacts"""
+        mySql_Query = """SELECT id FROM Contacts ORDER BY ID DESC LIMIT 1"""
         cursor.execute(mySql_Query)
         cpt = cursor.fetchall()
         connexion.commit()
@@ -243,11 +186,6 @@ def modifyContact(json_data):
             cursor.close()
             connexion.close()
 
-def sendDataToWebInterface(packet):
-    url = 'http://127.0.0.1:8080/'
-    myobj = "Status: "+str(packet[1])+" Type: "+str(packet[0][0])+" Value: "+str(packet[0][1])
-    postRequest = req.post(url, data = myobj)
-
 # def sendDataToMobilePhone(packet):
 
 def extractMeasuredValues(filename):
@@ -295,12 +233,48 @@ def analyseModule(data):
             status=2
             return (data,status) 
 
-# valuemeasured = extractMeasuredValues("measured_data.csv")
-# random.shuffle(valuemeasured)
 
-# for elem in valuemeasured:
-#     measureAnalysed=analyseModule(elem)
-#     #Si mesure définit comme anormal ou ayant été détecté comme une anomalie, notifier
-#     if(measureAnalysed[1]!=0):
-#         sendDataToWebInterface(measureAnalysed)
-#         # sendDataToMobilePhone(measureAnalysed)
+
+class Account : 
+    def __init__(self, email, password):
+        self.email = email
+        self.password = password
+
+class Contact :
+    def __init__(self, name, email, phone, id):
+        self.name = name
+        self.email = email
+        self.phone = phone
+        self.id = id    
+
+#--------------------------------------------------------------------------------
+#Second thread gestion des données capteurs - envoi d'une alerte par mail
+
+def sendmail(server,measureAnalysed):
+    print(f"Sending email to {recipient}")
+    message = MIMEMultipart('alternative')
+    message['From'] = email_sender_account
+    message['To'] = recipient
+    message['Subject'] = email_subject
+    body=email_body+str("\r\n")+str(measureAnalysed[0][0])+ " sensor, critical value : "+str(measureAnalysed[0][1])
+    message.attach(MIMEText (body, 'plain'))
+    server.send_message(message)#All emails sent, log out.
+    # server.quit()
+
+def alert():
+    #Initialisation connexion mail
+    #login to email server
+    server = smtplib.SMTP(email_smtp_server,email_smtp_port)
+    server.starttls()
+    server.login(email_sender_account,email_sender_password)
+
+
+    valuemeasured = extractMeasuredValues("measured_data.csv")
+    random.shuffle(valuemeasured)
+
+    for elem in valuemeasured:
+        measureAnalysed=analyseModule(elem)
+        time.sleep(3)
+        #Si mesure définit comme anormal ou ayant été détecté comme une anomalie, notifier
+        if(measureAnalysed[1]!=0):
+            sendmail(server,measureAnalysed)
