@@ -46,6 +46,31 @@ npm install --global yarn
 
 ## Python - Back
 
+Files requirements :
+
+- main.py
+
+- python.py
+
+- CSV files that contains sensor data (measured_data.csv)
+
+Librairies requirements :
+
+- mysql-connector-python 8.0.28
+
+- pandas 1.4.1
+
+- requests 2.27.1
+
+- simplejson 3.17.6
+
+
+Launch back http server :
+
+``` 
+python server.py
+```
+WARNING : server.py calls functions from main.py, so this file must me in the same directory
 
 ## Usage
 
