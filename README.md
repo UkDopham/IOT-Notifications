@@ -94,10 +94,6 @@ you can now connect to the application by entering your login details.
 
 ![contacts](/screenshots/Screenshot_2.jpg)
 
-## Back 
-
-## Database 
-
 ## Contributing
 Antoine Delay - 
 Alexandre Do Pham - 
