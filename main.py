@@ -154,24 +154,28 @@ def getAllContacts():
             cursor.close()
             connexion.close()
 
-#Méthode permettant d'ajouter un nouveau compte à la base de données
-def addNewAccount(json_data):
+#Méthode permettant d'ajouter un nouveau contact à la base de données
+def addNewContact(json_data):
     try:
         checkDB()
         connexion = mysql.connector.connect(host=host,
                                              database='IOTNotification',
                                              user=user,
                                              password=password)
-        mySql_Query = """SELECT COUNT(*) FROM Accounts WHERE email = %s"""
+        mySql_Query = """SELECT COUNT(*) FROM Contacts WHERE email = %s"""
         data = json_data['data']
         val = (data['email'],)
         cursor = connexion.cursor()
         cursor.execute(mySql_Query, val)
         result = cursor.fetchall()
         connexion.commit()
+        mySql_Query = """SELECT COUNT(*) FROM Contacts"""
+        cursor.execute(mySql_Query)
+        cpt = cursor.fetchall()
+        connexion.commit()
         if(result[0][0] == 0):
-            mySql_Query = "INSERT INTO Accounts (email, password) VALUES (%s, SHA(%s))"
-            val = (data['email'], data['password'])
+            mySql_Query = "INSERT INTO Contacts (name, email, phone, id) VALUES (%s, %s, %s, %s)"
+            val = (data['name'], data['email'], data['phone'], cpt[0][0] + 1)
             cursor.execute(mySql_Query, val)
             connexion.commit()
     except Error as e:
@@ -186,26 +190,23 @@ def addNewAccount(json_data):
     #else:
         #print("[/!\] Email is already registered !")
 
-#Méthode permettant de supprimer un compte de la base de données 
-def removeAccount(json_data):
+#Méthode permettant de supprimer un contact de la base de données            
+def removeContact(json_data):
     try:
         checkDB()
         connexion = mysql.connector.connect(host=host,
                                              database='IOTNotification',
                                              user=user,
                                              password=password)
-        mySql_Query = """SELECT COUNT(*) FROM Accounts WHERE email = %s"""
-        #data = json_data['data']
-        #val = (data['email'],)
-        val = (json_data['email'],)
+        mySql_Query = """SELECT COUNT(*) FROM Contacts WHERE id = %s"""
+        val = (json_data['id'],)
         cursor = connexion.cursor()
         cursor.execute(mySql_Query, val)
         result = cursor.fetchall()
         connexion.commit()
         if(result[0][0] == 1):
-            mySql_Query = "DELETE FROM Accounts WHERE email = %s"
-            #val = (data['email'],)
-            val = (json_data['email'],)
+            mySql_Query = "DELETE FROM Contacts WHERE id = %s"
+            val = (json_data['id'],)
             cursor.execute(mySql_Query, val)
             connexion.commit()
     except Error as e:
@@ -221,17 +222,17 @@ def removeAccount(json_data):
             #return
     #print("[/!\] Account to be removed not found !")
 
-#Méthode permettant de modifier un compte de la base de données 
-def modifyAccount(json_data):
+#Méthode permettant de modifier un contact de la base de données 
+def modifyContact(json_data):
     try:
         checkDB()
         connexion = mysql.connector.connect(host=host,
                                              database='IOTNotification',
                                              user=user,
                                              password=password)
-        mySql_Query = """UPDATE `IOTNotification`.`Accounts` SET password = SHA(%s) WHERE email = %s;"""
+        mySql_Query = """UPDATE `IOTNotification`.`Contacts` SET name = %s, email = %s, phone = %s WHERE id = %s;"""
         data = json_data['data']
-        val = (data['password'], data['email'])
+        val = (data['name'], data['email'], data['phone'], data['id'])
         cursor = connexion.cursor()
         cursor.execute(mySql_Query, val)
         connexion.commit()
