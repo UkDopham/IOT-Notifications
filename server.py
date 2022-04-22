@@ -13,6 +13,18 @@ accounts = getAllAccounts()
 #a = Account("a.a@gmail.com", "a")
 #accounts = [ a, b, c]
 
+###############LISTE DES COMPTES POUR TESTER##############
+#Compte 1 
+#- Email : alexandre@gmail.com
+#- Password : alexandre
+#Compte 2 
+#- Email : antoine@gmail.com
+#- Password : antoine
+#Compte 3 
+#- Email : valentin@gmail.com
+#- Password : valentin
+##########################################################
+
 # TODO get contacts in database
 #d = Contact("Harpagon", "Harpagon@gmail.com", "06 00 00 00 01", 1)
 #e = Contact("Mariane", "Mariane@gmail.com", "06 00 00 00 02", 2)
