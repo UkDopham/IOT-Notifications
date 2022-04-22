@@ -47,6 +47,30 @@ def checkDB():
         mySql_Query = """CREATE TABLE IF NOT EXISTS `IOTNotification`.`Datas`(`id` BIGINT NOT NULL, `type` VARCHAR(20), `value` DOUBLE, `anomaly` INTEGER, PRIMARY KEY (`id`));"""
         cursor.execute(mySql_Query)
         connexion.commit()
+        mySql_Query = """INSERT INTO `IOTNotification`.`Accounts` (`email`) SELECT ('antoine@gmail.com') WHERE NOT EXISTS (SELECT * FROM `IOTNotification`.`Accounts`)"""
+        cursor = connexion.cursor()
+        cursor.execute(mySql_Query)
+        connexion.commit()
+        mySql_Query = """UPDATE `IOTNotification`.`Accounts` SET password = SHA('antoine') WHERE email = 'antoine@gmail.com';"""
+        cursor = connexion.cursor()
+        cursor.execute(mySql_Query)
+        connexion.commit()
+        mySql_Query = """INSERT INTO `IOTNotification`.`Accounts` (`email`) SELECT ('alexandre@gmail.com') WHERE NOT EXISTS (SELECT * FROM `IOTNotification`.`Accounts` WHERE email = 'alexandre@gmail.com')"""
+        cursor = connexion.cursor()
+        cursor.execute(mySql_Query)
+        connexion.commit()
+        mySql_Query = """UPDATE `IOTNotification`.`Accounts` SET password = SHA('alexandre') WHERE email = 'alexandre@gmail.com';"""
+        cursor = connexion.cursor()
+        cursor.execute(mySql_Query)
+        connexion.commit()
+        mySql_Query = """INSERT INTO `IOTNotification`.`Accounts` (`email`) SELECT ('valentin@gmail.com') WHERE NOT EXISTS (SELECT * FROM `IOTNotification`.`Accounts` WHERE email = 'valentin@gmail.com')"""
+        cursor = connexion.cursor()
+        cursor.execute(mySql_Query)
+        connexion.commit()
+        mySql_Query = """UPDATE `IOTNotification`.`Accounts` SET password = SHA('valentin') WHERE email = 'valentin@gmail.com';"""
+        cursor = connexion.cursor()
+        cursor.execute(mySql_Query)
+        connexion.commit()
     except Error as e:
         print("Erreur en essayant de connecter à la base de données", e)
     finally:
