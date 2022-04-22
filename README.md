@@ -94,7 +94,7 @@ You can now connect to the application by entering your login details.
 
 You can take the following accounts to test the application
 
-
+![image](https://user-images.githubusercontent.com/78219632/164730031-0a2ef362-49b2-4222-8907-5c30e33e4b86.png)
 
 This will redirect you to the following page
 
