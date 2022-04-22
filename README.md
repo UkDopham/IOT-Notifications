@@ -90,7 +90,13 @@ yarn start
 ```
 ![login](/screenshots/Screenshot_1.jpg)
 
-you can now connect to the application by entering your login details.
+You can now connect to the application by entering your login details.
+
+You can take the following accounts to test the application
+
+
+
+This will redirect you to the following page
 
 ![contacts](/screenshots/Screenshot_2.jpg)
 
